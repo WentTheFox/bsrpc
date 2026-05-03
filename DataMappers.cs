@@ -340,7 +340,7 @@ namespace bsrpc
                     activity.State = PluginConfig.Instance.MultiplayerLobbyValue;
                     if (PluginConfig.Instance.MultiplayerPartyInfo)
                     {
-                        activity.Party.Size = new PartySize();
+                        activity.Party.Size = new ActivityPartySize();
                         activity.Party.Size.MaxSize = MapData.Instance.MultiplayerLobbyMaxSize;
                         activity.Party.Size.CurrentSize = MapData.Instance.MultiplayerLobbyCurrentSize;
                     }

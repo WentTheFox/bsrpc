@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>bsrpc</RootNamespace>
     <AssemblyName>bsrpc</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
@@ -68,7 +68,7 @@
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DiscordCore, Version=1.0.10.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DiscordCore, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <Private>False</Private>
       <HintPath>$(GameDirectory)\Plugins\DiscordCore.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
