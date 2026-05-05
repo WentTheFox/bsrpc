@@ -13,6 +13,9 @@ namespace bsrpc.UI
         [UIValue("multiplayer-party-info")]
         public bool multiplayerPartyInfo { get { return PluginConfig.Instance.MultiplayerPartyInfo; } set { PluginConfig.Instance.MultiplayerPartyInfo = value; } }
 
+        [UIValue("multiplayer-lobby-joining")]
+        public bool multiplayerLobbyJoining { get { return PluginConfig.Instance.MultiplayerLobbyJoining; } set { PluginConfig.Instance.MultiplayerLobbyJoining = value; } }
+
         [UIValue("large-image-cover")]
         public bool largeImageCover { get { return PluginConfig.Instance.LargeImageSongCover; } set { PluginConfig.Instance.LargeImageSongCover = value; } }
 

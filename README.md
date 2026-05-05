@@ -34,7 +34,13 @@ When `true` the mod will detect when you are in the built-in Multiplayer menu. I
 
 ### `MultiplayerPartyInfo`
 
-When `true` and `MultiplayerDetection` is also enabled, the mod will display the size of the lobby as well as the number of people in it inside the rich presence.
+When `true` and `MultiplayerDetection` is also enabled, the mod will display the size of the lobby as well as the number of people in it inside the rich presence. It also exposes the lobby join code to Discord so that friends can join via the "Join Game" button or by accepting a join request.
+
+### `MultiplayerLobbyJoining`
+
+When `true` and `MultiplayerPartyInfo` is also enabled, the mod will handle incoming Discord join events and automatically connect you to the lobby. When someone asks to join your lobby via Discord and you accept, the join secret is sent to their game — if they also have bsrpc installed with this option enabled, they will be taken to the multiplayer menu and connected automatically.
+
+Set to `false` to disable this behaviour entirely (no join events will be processed, even if received from Discord).
 
 ### `LargeImageSongCover`
 

@@ -2,6 +2,7 @@
 
   <checkbox text='Enable Multiplayer Detection' value='multiplayer-detection' apply-on-change='true' />
   <checkbox text='Show Multiplayer Lobby Information' value='multiplayer-party-info' apply-on-change='true' />
+  <checkbox text='Enable Lobby Joining via Discord' value='multiplayer-lobby-joining' apply-on-change='true' />
   <checkbox text='Use Cover Art as Large Image' value='large-image-cover' apply-on-change='true' />
   <checkbox text='Show Time Spent in Menus' value='show-elapsed-times' apply-on-change='true' />
   <checkbox text='Show Map Type as Small Image' value='small-image-map-type' apply-on-change='true' />

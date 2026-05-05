@@ -1,7 +1,9 @@
-﻿using bsrpc.UI;
+﻿using bsrpc.Harmony;
+using bsrpc.UI;
 using DataPuller.Data;
 using Discord;
 using DiscordCore;
+using HarmonyLib;
 using IPA;
 using IPA.Config.Stores;
 using System;
@@ -16,6 +18,7 @@ namespace bsrpc
     public class Plugin
     {
         private DiscordInstance _discord;
+        private HarmonyLib.Harmony _harmony;
         private DateTime _lastSceneSwitchTime = DateTime.Now;
         private DataMappers.Scenes _lastScene = DataMappers.Scenes.Unknown;
         public static DateTime? LastPauseDateTime { get; private set; } = null;
@@ -48,7 +51,14 @@ namespace bsrpc
             MapData.Instance.OnUpdate += UpdateRichPresence;
             LiveData.Instance.OnUpdate += UpdateRichPresence;
 
+            _harmony = new HarmonyLib.Harmony("bsrpc");
+            _harmony.PatchAll(Assembly.GetExecutingAssembly());
+            BspJoinService.TryPatch(_harmony);
+
             CreateDiscordManager();
+            _discord.OnActivityJoin += OnActivityJoin;
+            _discord.OnActivityJoinRequest += OnActivityJoinRequest;
+            _discord.OnActivityInvite += OnActivityInvite;
             PluginConfig.Instance.OnReloaded += HandleConfigUpdate;
             PluginConfig.Instance.OnChanged += HandleConfigUpdate;
             UpdateRichPresence();
@@ -74,8 +84,14 @@ namespace bsrpc
             if (PluginConfig.Instance.DiscordClientId != _discord.settings.appId)
             {
                 // Recreate Discord connection on App ID change
+                _discord.OnActivityJoin -= OnActivityJoin;
+                _discord.OnActivityJoinRequest -= OnActivityJoinRequest;
+                _discord.OnActivityInvite -= OnActivityInvite;
                 _discord.DestroyInstance();
                 CreateDiscordManager();
+                _discord.OnActivityJoin += OnActivityJoin;
+                _discord.OnActivityJoinRequest += OnActivityJoinRequest;
+                _discord.OnActivityInvite += OnActivityInvite;
             }
             // Force update to Rich Presence
             UpdateRichPresence();
@@ -86,10 +102,40 @@ namespace bsrpc
             _discord = DiscordManager.instance.CreateInstance(new DiscordSettings
             {
                 appId = PluginConfig.Instance.DiscordClientId,
-                handleInvites = false,
+                handleInvites = true,
                 modId = nameof(bsrpc),
                 modName = nameof(bsrpc)
             });
+        }
+
+        private void OnActivityJoin(string secret)
+        {
+            Log.Debug($"Activity join event received, secret: {secret}");
+            if (!PluginConfig.Instance.MultiplayerLobbyJoining) return;
+            // Expected format: bsrpc://Source/JOINCODE
+            if (secret.StartsWith("bsrpc://"))
+            {
+                var path = secret.Substring("bsrpc://".Length);
+                var slash = path.IndexOf('/');
+                if (slash > 0)
+                {
+                    var source = path.Substring(0, slash);
+                    var code = path.Substring(slash + 1);
+                    MultiplayerJoinService.RequestJoin(source, code);
+                    return;
+                }
+            }
+            Log.Warn($"Activity join: unrecognised secret format: {secret}");
+        }
+
+        private void OnActivityJoinRequest(ref User user)
+        {
+            Log.Debug($"Activity join request from user: {user.Id}");
+        }
+
+        private void OnActivityInvite(ActivityActionType type, ref User user, ref Activity activity)
+        {
+            Log.Debug($"Activity invite from user {user.Id}, type: {type}");
         }
 
         private void PauseTimerElapsed(object sender, ElapsedEventArgs e)
@@ -150,7 +196,11 @@ namespace bsrpc
             LiveData.Instance.OnUpdate -= UpdateRichPresence;
             PluginConfig.Instance.OnReloaded -= HandleConfigUpdate;
             PluginConfig.Instance.OnChanged -= HandleConfigUpdate;
+            _discord.OnActivityJoin -= OnActivityJoin;
+            _discord.OnActivityJoinRequest -= OnActivityJoinRequest;
+            _discord.OnActivityInvite -= OnActivityInvite;
             _discord.DestroyInstance();
+            _harmony?.UnpatchSelf();
         }
     }
 }

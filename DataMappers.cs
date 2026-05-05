@@ -343,6 +343,14 @@ namespace bsrpc
                         activity.Party.Size = new ActivityPartySize();
                         activity.Party.Size.MaxSize = MapData.Instance.MultiplayerLobbyMaxSize;
                         activity.Party.Size.CurrentSize = MapData.Instance.MultiplayerLobbyCurrentSize;
+
+                        var joinCode = MapData.Instance.MultiplayerLobbyJoinCode;
+                        var source = MapData.Instance.MultiplayerLobbySource;
+                        if (!string.IsNullOrEmpty(joinCode) && !string.IsNullOrEmpty(source))
+                        {
+                            activity.Party.Id = joinCode;
+                            activity.Secrets.Join = $"bsrpc://{source}/{joinCode}";
+                        }
                     }
                 }
                 else

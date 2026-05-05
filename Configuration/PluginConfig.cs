@@ -26,6 +26,9 @@ namespace bsrpc
         public virtual bool MultiplayerPartyInfo { get; set; } = true;
 
         [NonNullable]
+        public virtual bool MultiplayerLobbyJoining { get; set; } = true;
+
+        [NonNullable]
         public virtual bool LargeImageSongCover { get; set; } = true;
 
         [NonNullable]
