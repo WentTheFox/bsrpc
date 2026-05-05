@@ -355,7 +355,7 @@ namespace bsrpc
                 }
                 else
                 {
-                    activity.State = PluginConfig.Instance.MainMenuValue;
+                    activity.State = Harmony.MenuScreenService.GetCurrentScreenDisplay();
                 }
             }
 

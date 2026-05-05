@@ -2,8 +2,8 @@
   "$schema": "https://raw.githubusercontent.com/bsmg/BSIPA-MetadataFileSchema/master/Schema.json",
   "id": "bsrpc",
   "name": "bsrpc",
-  "author": "DJDavid98",
-  "version": "1.4.0",
+  "author": "WentTheFox",
+  "version": "1.4.1",
   "description": "Discord Rich Presence integration for Beat Saber",
   "gameVersion": "1.40.8",
   "dependsOn": {
@@ -13,6 +13,6 @@
     "BeatSaberMarkupLanguage": "^1.12.5"
   },
   "links": {
-    "project-source": "https://github.com/DJDavid98/bsrpc"
+    "project-source": "https://github.com/WentTheFox/bsrpc"
   }
 }

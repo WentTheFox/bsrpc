@@ -136,6 +136,7 @@
   <ItemGroup>
     <Compile Include="DataMappers.cs" />
     <Compile Include="Harmony\BspJoinService.cs" />
+    <Compile Include="Harmony\MenuScreenService.cs" />
     <Compile Include="Harmony\MultiplayerJoinService.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="bsrpcController.cs" />

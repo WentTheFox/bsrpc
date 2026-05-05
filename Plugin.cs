@@ -54,6 +54,8 @@ namespace bsrpc
             _harmony = new HarmonyLib.Harmony("bsrpc");
             _harmony.PatchAll(Assembly.GetExecutingAssembly());
             BspJoinService.TryPatch(_harmony);
+            MenuScreenService.Patch(_harmony);
+            MenuScreenService.OnScreenChanged += UpdateRichPresence;
 
             CreateDiscordManager();
             _discord.OnActivityJoin += OnActivityJoin;
@@ -199,6 +201,7 @@ namespace bsrpc
             _discord.OnActivityJoin -= OnActivityJoin;
             _discord.OnActivityJoinRequest -= OnActivityJoinRequest;
             _discord.OnActivityInvite -= OnActivityInvite;
+            MenuScreenService.OnScreenChanged -= UpdateRichPresence;
             _discord.DestroyInstance();
             _harmony?.UnpatchSelf();
         }
