@@ -349,7 +349,10 @@ namespace bsrpc
                         if (!string.IsNullOrEmpty(joinCode) && !string.IsNullOrEmpty(source))
                         {
                             activity.Party.Id = joinCode;
-                            activity.Secrets.Join = $"bsrpc://{source}/{joinCode}";
+                            var modName = MapData.Instance.MultiplayerCoreLobbyMod;
+                            activity.Secrets.Join = string.IsNullOrEmpty(modName)
+                                ? $"bsrpc://{source}/{joinCode}"
+                                : $"bsrpc://{source}/{joinCode}?mod={modName}";
                         }
                     }
                 }
