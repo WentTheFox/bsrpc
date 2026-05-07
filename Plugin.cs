@@ -114,7 +114,7 @@ namespace bsrpc
         {
             Log.Debug($"Activity join event received, secret: {secret}");
             if (!PluginConfig.Instance.MultiplayerLobbyJoining) return;
-            // Expected format: bsrpc://Source/JOINCODE
+            // Expected format: bsrpc://Source/JOINCODE or bsrpc://Source/JOINCODE?mod=Name
             if (secret.StartsWith("bsrpc://"))
             {
                 var path = secret.Substring("bsrpc://".Length);
@@ -122,12 +122,30 @@ namespace bsrpc
                 if (slash > 0)
                 {
                     var source = path.Substring(0, slash);
-                    var code = path.Substring(slash + 1);
-                    MultiplayerJoinService.RequestJoin(source, code);
+                    var codeAndQuery = path.Substring(slash + 1);
+                    string? modName = null;
+                    var queryIdx = codeAndQuery.IndexOf('?');
+                    if (queryIdx >= 0)
+                    {
+                        modName = ParseModParam(codeAndQuery.Substring(queryIdx + 1));
+                        codeAndQuery = codeAndQuery.Substring(0, queryIdx);
+                    }
+                    MultiplayerJoinService.RequestJoin(source, codeAndQuery, modName);
                     return;
                 }
             }
             Log.Warn($"Activity join: unrecognised secret format: {secret}");
+        }
+
+        private static string? ParseModParam(string query)
+        {
+            foreach (var param in query.Split('&'))
+            {
+                var eq = param.IndexOf('=');
+                if (eq > 0 && param.Substring(0, eq) == "mod")
+                    return param.Substring(eq + 1);
+            }
+            return null;
         }
 
         private void OnActivityJoinRequest(ref User user)
