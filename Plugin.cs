@@ -1,4 +1,4 @@
-﻿using bsrpc.Harmony;
+﻿ using bsrpc.Harmony;
 using bsrpc.UI;
 using DataPuller.Data;
 using Discord;
@@ -9,7 +9,6 @@ using IPA.Config.Stores;
 using System;
 using System.Reflection;
 using System.Timers;
-using System.Web;
 using UnityEngine;
 using IPALogger = IPA.Logging.Logger;
 
@@ -118,8 +117,9 @@ namespace bsrpc
             if (Uri.TryCreate(secret, UriKind.Absolute, out var uri) && uri.Scheme == "bsrpc")
             {
                 var source = uri.Host;
-                var code = uri.AbsolutePath.TrimStart('/');
-                var mod = HttpUtility.ParseQueryString(uri.Query)["mod"];
+                var segments = uri.AbsolutePath.TrimStart('/').Split(new[] { '/' }, 2);
+                var code = segments.Length > 1 ? segments[1] : segments[0];
+                var mod = segments.Length > 1 ? segments[0] : null;
                 MultiplayerJoinService.RequestJoin(source, code, mod);
                 return;
             }
