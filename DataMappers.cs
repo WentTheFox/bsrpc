@@ -1,4 +1,4 @@
-﻿using DataPuller.Data;
+﻿ using DataPuller.Data;
 using Discord;
 using System;
 using System.Collections.Generic;
@@ -352,7 +352,7 @@ namespace bsrpc
                             var modName = MapData.Instance.MultiplayerCoreLobbyMod;
                             activity.Secrets.Join = string.IsNullOrEmpty(modName)
                                 ? $"bsrpc://{source}/{joinCode}"
-                                : $"bsrpc://{source}/{joinCode}?mod={modName}";
+                                : $"bsrpc://{source}/{modName}/{joinCode}";
                         }
                     }
                 }
