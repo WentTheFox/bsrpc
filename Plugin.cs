@@ -9,6 +9,7 @@ using IPA.Config.Stores;
 using System;
 using System.Reflection;
 using System.Timers;
+using System.Web;
 using UnityEngine;
 using IPALogger = IPA.Logging.Logger;
 
@@ -114,38 +115,15 @@ namespace bsrpc
         {
             Log.Debug($"Activity join event received, secret: {secret}");
             if (!PluginConfig.Instance.MultiplayerLobbyJoining) return;
-            // Expected format: bsrpc://Source/JOINCODE or bsrpc://Source/JOINCODE?mod=Name
-            if (secret.StartsWith("bsrpc://"))
+            if (Uri.TryCreate(secret, UriKind.Absolute, out var uri) && uri.Scheme == "bsrpc")
             {
-                var path = secret.Substring("bsrpc://".Length);
-                var slash = path.IndexOf('/');
-                if (slash > 0)
-                {
-                    var source = path.Substring(0, slash);
-                    var codeAndQuery = path.Substring(slash + 1);
-                    string? modName = null;
-                    var queryIdx = codeAndQuery.IndexOf('?');
-                    if (queryIdx >= 0)
-                    {
-                        modName = ParseModParam(codeAndQuery.Substring(queryIdx + 1));
-                        codeAndQuery = codeAndQuery.Substring(0, queryIdx);
-                    }
-                    MultiplayerJoinService.RequestJoin(source, codeAndQuery, modName);
-                    return;
-                }
+                var source = uri.Host;
+                var code = uri.AbsolutePath.TrimStart('/');
+                var mod = HttpUtility.ParseQueryString(uri.Query)["mod"];
+                MultiplayerJoinService.RequestJoin(source, code, mod);
+                return;
             }
             Log.Warn($"Activity join: unrecognised secret format: {secret}");
-        }
-
-        private static string? ParseModParam(string query)
-        {
-            foreach (var param in query.Split('&'))
-            {
-                var eq = param.IndexOf('=');
-                if (eq > 0 && param.Substring(0, eq) == "mod")
-                    return param.Substring(eq + 1);
-            }
-            return null;
         }
 
         private void OnActivityJoinRequest(ref User user)
