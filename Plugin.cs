@@ -1,4 +1,4 @@
-﻿using bsrpc.Harmony;
+﻿ using bsrpc.Harmony;
 using bsrpc.UI;
 using DataPuller.Data;
 using Discord;
@@ -114,18 +114,14 @@ namespace bsrpc
         {
             Log.Debug($"Activity join event received, secret: {secret}");
             if (!PluginConfig.Instance.MultiplayerLobbyJoining) return;
-            // Expected format: bsrpc://Source/JOINCODE
-            if (secret.StartsWith("bsrpc://"))
+            if (Uri.TryCreate(secret, UriKind.Absolute, out var uri) && uri.Scheme == "bsrpc")
             {
-                var path = secret.Substring("bsrpc://".Length);
-                var slash = path.IndexOf('/');
-                if (slash > 0)
-                {
-                    var source = path.Substring(0, slash);
-                    var code = path.Substring(slash + 1);
-                    MultiplayerJoinService.RequestJoin(source, code);
-                    return;
-                }
+                var source = uri.Host;
+                var segments = uri.AbsolutePath.TrimStart('/').Split(new[] { '/' }, 2);
+                var code = segments.Length > 1 ? segments[1] : segments[0];
+                var mod = segments.Length > 1 ? segments[0] : null;
+                MultiplayerJoinService.RequestJoin(source, code, mod);
+                return;
             }
             Log.Warn($"Activity join: unrecognised secret format: {secret}");
         }

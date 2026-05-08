@@ -7,21 +7,25 @@ namespace bsrpc.Harmony
     {
         internal static string _pendingCode;
         internal static string _pendingSource;
+        internal static string _pendingMod;
 
-        internal static void RequestJoin(string source, string code)
+        internal static void RequestJoin(string source, string code, string modName = null)
         {
             _pendingSource = source;
             _pendingCode = code;
+            _pendingMod = modName;
             var hint = source == MultiplayerLobbySourceType.BeatSaberPlus_Multiplayer
                 ? "navigate to Multiplayer+ to auto-join"
                 : "navigate to Multiplayer to auto-join";
-            Plugin.Log.Info($"Join queued ({source}/{code}) — {hint}");
+            var modInfo = modName != null ? $", mod={modName}" : "";
+            Plugin.Log.Info($"Join queued ({source}/{code}{modInfo}) — {hint}");
         }
 
         internal static void Clear()
         {
             _pendingSource = null;
             _pendingCode = null;
+            _pendingMod = null;
         }
     }
 

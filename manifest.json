@@ -3,12 +3,12 @@
   "id": "bsrpc",
   "name": "bsrpc",
   "author": "WentTheFox",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "Discord Rich Presence integration for Beat Saber",
   "gameVersion": "1.43.0",
   "dependsOn": {
     "BSIPA": "^4.3.7",
-    "DataPuller": "^2.1.18",
+    "DataPuller": "^3.0.0",
     "DiscordCore": "^4.1.1",
     "BeatSaberMarkupLanguage": "^1.14.1"
   },
