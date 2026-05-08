@@ -64,10 +64,7 @@ jobs:
           DP_VER=$(jq -r '.dependsOn.DataPuller | ltrimstr("^") | ltrimstr("~")' manifest.json)
           DC_VER=$(jq -r '.dependsOn.DiscordCore | ltrimstr("^") | ltrimstr("~")' manifest.json)
           download_mod "DataPuller"  "WentTheFox/BSDataPuller"          "v${DP_VER}"
-          download_mod "DiscordCore" "nicoco007/BeatSaberDiscordCore"    "v${DC_VER}"
-
-      - name: Install Mono (.NET Framework 4.8 targeting pack)
-        run: sudo apt-get install -y mono-devel
+          download_mod "DiscordCore" "WentTheFox/DiscordCore"             "v${DC_VER}"
 
       - name: Build
         id: Build
