@@ -29,9 +29,40 @@ jobs:
           manifest: ./manifest.json
 
       - name: Fetch Mod References
+        continue-on-error: true
         uses: Goobwabber/download-beatmods-deps@1.3
         with:
           manifest: ./manifest.json
+
+      - name: Download missing mod refs from GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          download_mod() {
+            local dll="$1" repo="$2" tag="$3"
+            if [ -f "$BEATSABER_PATH/Plugins/${dll}.dll" ]; then
+              echo "${dll}.dll already present, skipping"
+              return
+            fi
+            echo "Downloading ${dll} from ${repo} @ ${tag}"
+            local tmp=$(mktemp -d)
+            gh release download "${tag}" --repo "${repo}" --pattern "*.zip" --dir "${tmp}"
+            local found=$(find "${tmp}" -name "${dll}.dll" | head -1)
+            if [ -z "$found" ]; then
+              unzip -d "${tmp}/x" "${tmp}"/*.zip
+              found=$(find "${tmp}/x" -name "${dll}.dll" | head -1)
+            fi
+            if [ -z "$found" ]; then
+              echo "::error::${dll}.dll not found in release archive for ${repo} ${tag}"
+              exit 1
+            fi
+            cp "$found" "$BEATSABER_PATH/Plugins/${dll}.dll"
+            echo "Installed ${dll}.dll"
+          }
+          DP_VER=$(jq -r '.dependsOn.DataPuller | ltrimstr("^") | ltrimstr("~")' manifest.json)
+          DC_VER=$(jq -r '.dependsOn.DiscordCore | ltrimstr("^") | ltrimstr("~")' manifest.json)
+          download_mod "DataPuller"  "WentTheFox/BSDataPuller"          "v${DP_VER}"
+          download_mod "DiscordCore" "nicoco007/BeatSaberDiscordCore"    "v${DC_VER}"
 
       - name: Build
         id: Build
