@@ -7,9 +7,9 @@ namespace bsrpc.Harmony
     {
         internal static string _pendingCode;
         internal static string _pendingSource;
-        internal static string? _pendingMod;
+        internal static string _pendingMod;
 
-        internal static void RequestJoin(string source, string code, string? modName = null)
+        internal static void RequestJoin(string source, string code, string modName = null)
         {
             _pendingSource = source;
             _pendingCode = code;
