@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  Release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Initialize modding environment
+        uses: beat-forge/init-beatsaber@v1
+        with:
+          token: ${{ github.token }}
+          repo: beat-forge/beatsaber-stripped
+          manifest: ./manifest.json
+
+      - name: Fetch Mod References
+        uses: Goobwabber/download-beatmods-deps@1.3
+        with:
+          manifest: ./manifest.json
+
+      - name: Build
+        id: Build
+        run: dotnet build --configuration Release /p:DefineConstants=CIBuild
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.Build.outputs.artifactpath }}
+          generate_release_notes: true

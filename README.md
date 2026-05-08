@@ -38,13 +38,15 @@ When `true` and `MultiplayerDetection` is also enabled, the mod will display the
 
 ### `MultiplayerLobbyJoining`
 
-When `true` and `MultiplayerPartyInfo` is also enabled, the mod will handle incoming Discord join events and automatically connect you to the lobby. When someone asks to join your lobby via Discord and you accept, the join secret is sent to their game — if they also have bsrpc installed with this option enabled, they will be taken to the multiplayer menu and connected automatically.
+When `true` and `MultiplayerPartyInfo` is also enabled, the mod will handle incoming Discord join events and automatically connect you to the lobby. When someone asks to join your lobby via Discord and you accept, the join secret is sent to their game — if they also have bsrpc installed with this option enabled, they will automatically be taken to the Online screen and connected to the lobby.
+
+If the player is already in a level when the join is accepted, the join is queued and they will need to navigate to the Online screen manually.
 
 Set to `false` to disable this behaviour entirely (no join events will be processed, even if received from Discord).
 
 ### `LargeImageSongCover`
 
-When `true` the mod sets the song cover image as the large image, if it's available. It only works for songs available on BeatSaver, and can be set to `false` to show the image of the current envorment instead, which is also used as a fallback in case no cover art is available.
+When `true` the mod sets the song cover image as the large image, if it's available. It only works for songs available on BeatSaver, and can be set to `false` to show the image of the current environment instead, which is also used as a fallback in case no cover art is available.
 
 ### `ShowElapsedTimes`
 
@@ -105,7 +107,7 @@ The strings also have configurable separators that go between each valid item. B
 | qualified            | Qualified text                           | ✨                           | Based on configuration             | If map is ranked      |
 | stars                | ScoreSaber ranked stars                  | 4,22                        | Up to two decimals                 | Greater than 0        |
 | blstars              | BeatLeader ranked stars                  | 6,98                        | Up to two decimals                 | Greater than 0        |
-| pp                   | ScoreSaber perofrmance points            | 167,89                      | Up to two decimals                 | Greater than 0        |
+| pp                   | ~~ScoreSaber performance points~~        | ~~167,89~~                  | Removed in DataPuller 2.2.0        | Always empty          |
 | playState            | Emoji indicating play state              | ▶️                          | Based on configuration             | Not empty             |
 | modifiersState       | Emojis indicating modifiers              | 🧘                          | Based on configuration             | Not empty             |
 | lobbyType            | Single/multiplayer or practice           | 👤                          | Based on configuration             | Not empty             |
@@ -113,7 +115,7 @@ The strings also have configurable separators that go between each valid item. B
 | score                | Total score                              | 123,456                     |                                    | Greater than 0        |
 | topScore             | Top score for mode and difficulty        | 156,789                     |                                    | Greater than 0        |
 | combo                | Consecutive hits without misses          | 234                         | No decimals                        | Greater than 0        |
-| misses               | Totall misses & bad cuts                 | 12                          | No decimals                        | Greater than 0        |
+| misses               | Total misses & bad cuts                  | 12                          | No decimals                        | Greater than 0        |
 | energy               | Player health                            | 90                          | 0-100, no % sign                   |                       |
 | bpm                  | Song beats per minute                    | 180                         | No decimals                        | Greater than 0        |
 | njs                  | Song note jump speed                     | 14,21                       | Up to two decimals                 | Greater than 0        |
@@ -148,7 +150,7 @@ The `PlayStateEmoji`, `ModifierEmoji` and `LobbyTypeEmoji` options allow you to 
 
 ## Dependencies
 
-* BSIPA v4.3.3 (ModAssistant)
-* BeatSaberMarkupLanguage v1.12.1 (ModAssistant)
-* DiscordCore v3.0.6 (https://github.com/DJDavid98/DiscordCore/releases/tag/v3.0.6)
-* DataPuller v2.1.14 (https://github.com/DJDavid98/BSDataPuller/releases/tag/2.1.14)
+* BSIPA v4.3.6 (ModAssistant)
+* BeatSaberMarkupLanguage v1.12.5 (ModAssistant)
+* DiscordCore v4.0.0 (ModAssistant)
+* DataPuller v2.2.0 (https://github.com/DJDavid98/BSDataPuller/releases/tag/2.2.0)

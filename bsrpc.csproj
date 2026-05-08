@@ -96,6 +96,10 @@
       <HintPath>$(GameDirectory)\Beat Saber_Data\Managed\HMLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="BeatSaber.ViewSystem">
+      <HintPath>$(GameDirectory)\Beat Saber_Data\Managed\BeatSaber.ViewSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="HMUI">
       <HintPath>$(GameDirectory)\Beat Saber_Data\Managed\HMUI.dll</HintPath>
       <Private>False</Private>

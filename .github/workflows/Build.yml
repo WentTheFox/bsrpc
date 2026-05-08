@@ -1,0 +1,44 @@
+name: Build
+
+on:
+  push:
+    branches: [ bs1.40.8 ]
+    paths:
+      - 'bsrpc.sln'
+      - 'bsrpc.csproj'
+      - 'manifest.json'
+      - '**/*.cs'
+      - '.github/workflows/Build.yml'
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Initialize modding environment
+        uses: beat-forge/init-beatsaber@v1
+        with:
+          token: ${{ github.token }}
+          repo: beat-forge/beatsaber-stripped
+          manifest: ./manifest.json
+
+      - name: Fetch Mod References
+        uses: Goobwabber/download-beatmods-deps@1.3
+        with:
+          manifest: ./manifest.json
+
+      - name: Build
+        id: Build
+        run: dotnet build --configuration Release /p:DefineConstants=CIBuild
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.Build.outputs.filename }}
+          path: ${{ steps.Build.outputs.artifactpath }}

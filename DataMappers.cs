@@ -53,7 +53,7 @@ namespace bsrpc
                 case "customDifficulty": return MapData.Instance.CustomDifficultyLabel;
                 case "stars": return MapData.Instance.RankedState.ScoresaberStars > 0 ? $"{MapData.Instance.RankedState.ScoresaberStars:N2}" : "";
                 case "blstars": return MapData.Instance.RankedState.BeatleaderStars > 0 ? $"{MapData.Instance.RankedState.BeatleaderStars:N2}" : "";
-                case "pp": return MapData.Instance.PP > 0 ? $"{MapData.Instance.PP:N2}" : "";
+                case "pp": return ""; // MapData.PP removed in DataPuller 2.2.0
                 case "playState": return GetPlayState();
                 case "modifiersState": return GetModifiersState();
                 case "lobbyType": return GetLobbyType();
