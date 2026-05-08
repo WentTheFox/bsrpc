@@ -33,9 +33,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          PLUGIN_DIR="./Refs/Plugins"
+          mkdir -p "$PLUGIN_DIR"
           download_mod() {
             local dll="$1" repo="$2" tag="$3"
-            if [ -f "$BEATSABER_PATH/Plugins/${dll}.dll" ]; then
+            if [ -f "${PLUGIN_DIR}/${dll}.dll" ]; then
               echo "${dll}.dll already present, skipping"
               return
             fi
@@ -51,7 +53,7 @@ jobs:
               echo "::error::${dll}.dll not found in release archive for ${repo} ${tag}"
               exit 1
             fi
-            cp "$found" "$BEATSABER_PATH/Plugins/${dll}.dll"
+            cp "$found" "${PLUGIN_DIR}/${dll}.dll"
             echo "Installed ${dll}.dll"
           }
           DP_VER=$(jq -r '.dependsOn.DataPuller | ltrimstr("^") | ltrimstr("~")' manifest.json)
