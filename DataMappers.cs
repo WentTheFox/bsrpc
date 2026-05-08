@@ -2,6 +2,7 @@
 using Discord;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -129,6 +130,17 @@ namespace bsrpc
                 return PluginConfig.Instance.LobbyTypeEmoji.Practice;
             }
             return PluginConfig.Instance.LobbyTypeEmoji.Singleplayer;
+        }
+
+        internal static string HashPartyId(string input)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
+                var sb = new StringBuilder(hash.Length * 2);
+                foreach (var b in hash) sb.AppendFormat("{0:x2}", b);
+                return sb.ToString();
+            }
         }
 
         internal static long DateTimeToUnixTimestampMs(DateTime ticks)
@@ -348,7 +360,7 @@ namespace bsrpc
                         var source = MapData.Instance.MultiplayerLobbySource;
                         if (!string.IsNullOrEmpty(joinCode) && !string.IsNullOrEmpty(source))
                         {
-                            activity.Party.Id = joinCode;
+                            activity.Party.Id = HashPartyId(joinCode);
                             var modName = MapData.Instance.MultiplayerCoreLobbyMod;
                             activity.Secrets.Join = string.IsNullOrEmpty(modName)
                                 ? $"bsrpc://{source}/{joinCode}"
