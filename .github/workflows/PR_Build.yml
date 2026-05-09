@@ -1,0 +1,77 @@
+name: PR Build
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'bsrpc.sln'
+      - 'bsrpc.csproj'
+      - 'manifest.json'
+      - '**/*.cs'
+      - '.github/workflows/PR_Build.yml'
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Initialize modding environment
+        uses: beat-forge/init-beatsaber@v1
+        with:
+          token: ${{ github.token }}
+          repo: beat-forge/beatsaber-stripped
+          manifest: ./manifest.json
+
+      - name: Fetch Mod References
+        continue-on-error: true
+        uses: Goobwabber/download-beatmods-deps@1.3
+        with:
+          manifest: ./manifest.json
+
+      - name: Download missing mod refs from GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PLUGIN_DIR="./Refs/Plugins"
+          mkdir -p "$PLUGIN_DIR"
+          download_mod() {
+            local dll="$1" repo="$2" tag="$3"
+            if [ -f "${PLUGIN_DIR}/${dll}.dll" ]; then
+              echo "${dll}.dll already present, skipping"
+              return
+            fi
+            echo "Downloading ${dll} from ${repo} @ ${tag}"
+            local tmp=$(mktemp -d)
+            gh release download "${tag}" --repo "${repo}" --pattern "*.zip" --dir "${tmp}"
+            local found=$(find "${tmp}" -name "${dll}.dll" | head -1)
+            if [ -z "$found" ]; then
+              unzip -d "${tmp}/x" "${tmp}"/*.zip
+              found=$(find "${tmp}/x" -name "${dll}.dll" | head -1)
+            fi
+            if [ -z "$found" ]; then
+              echo "::error::${dll}.dll not found in release archive for ${repo} ${tag}"
+              exit 1
+            fi
+            cp "$found" "${PLUGIN_DIR}/${dll}.dll"
+            echo "Installed ${dll}.dll"
+          }
+          DP_VER=$(jq -r '.dependsOn.DataPuller | ltrimstr("^") | ltrimstr("~")' manifest.json)
+          DC_VER=$(jq -r '.dependsOn.DiscordCore | ltrimstr("^") | ltrimstr("~")' manifest.json)
+          download_mod "DataPuller"  "WentTheFox/BSDataPuller"   "v${DP_VER}"
+          download_mod "DiscordCore" "WentTheFox/DiscordCore"    "v${DC_VER}"
+
+      - name: Build
+        id: Build
+        run: dotnet build --configuration Release /p:DefineConstants=CIBuild
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.Build.outputs.filename }}
+          path: ${{ steps.Build.outputs.artifactpath }}

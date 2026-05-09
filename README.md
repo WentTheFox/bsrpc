@@ -105,7 +105,7 @@ The strings also have configurable separators that go between each valid item. B
 | qualified            | Qualified text                           | ✨                           | Based on configuration             | If map is ranked      |
 | stars                | ScoreSaber ranked stars                  | 4,22                        | Up to two decimals                 | Greater than 0        |
 | blstars              | BeatLeader ranked stars                  | 6,98                        | Up to two decimals                 | Greater than 0        |
-| pp                   | ScoreSaber perofrmance points            | 167,89                      | Up to two decimals                 | Greater than 0        |
+| pp                   | ~~ScoreSaber performance points~~        | ~~167,89~~                  | Removed in DataPuller 3.0.0        | Always empty          |
 | playState            | Emoji indicating play state              | ▶️                          | Based on configuration             | Not empty             |
 | modifiersState       | Emojis indicating modifiers              | 🧘                          | Based on configuration             | Not empty             |
 | lobbyType            | Single/multiplayer or practice           | 👤                          | Based on configuration             | Not empty             |

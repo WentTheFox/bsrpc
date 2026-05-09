@@ -11,10 +11,10 @@ namespace bsrpc
 {
     internal class PluginConfig
     {
-        public event Action OnReloaded;
-        public event Action OnChanged;
+        public event Action? OnReloaded;
+        public event Action? OnChanged;
 
-        public static PluginConfig Instance { get; set; }
+        public static PluginConfig Instance { get; set; } = null!;
 
         [NonNullable]
         public virtual long DiscordClientId { get; set; } = 1028340906740420711;
@@ -54,7 +54,7 @@ namespace bsrpc
             public virtual string ThreeSixty { get; set; } = "360°";
             [NonNullable]
             public virtual string Ninety { get; set; } = "90°";
-            public virtual string Fallback { get; set; } = null;
+            public virtual string? Fallback { get; set; } = null;
         }
 
         [NonNullable]

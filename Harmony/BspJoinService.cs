@@ -62,8 +62,8 @@ namespace bsrpc.Harmony
                 }
 
                 var capturedCode = code;
-                Func<IEnumerator> continuation = () => (IEnumerator)joinMethod.Invoke(__instance, new object[] { capturedCode });
-                var enumerator = (IEnumerator)connectMethod.Invoke(__instance, new object[] { capturedCode, false, continuation });
+                Func<IEnumerator> continuation = () => ((IEnumerator)joinMethod.Invoke(__instance, new object[] { capturedCode! }))!;
+                var enumerator = ((IEnumerator)connectMethod.Invoke(__instance, new object[] { capturedCode!, false, continuation }))!;
                 ((MonoBehaviour)__instance).StartCoroutine(enumerator);
 
                 Plugin.Log.Info($"BSP join: started connection coroutine for code {capturedCode}");

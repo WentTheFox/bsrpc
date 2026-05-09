@@ -8,7 +8,7 @@ namespace bsrpc.Harmony
 {
     internal static class MenuScreenService
     {
-        private static readonly Dictionary<string, string> KnownScreens = new Dictionary<string, string>
+        private static readonly Dictionary<string, string?> KnownScreens = new Dictionary<string, string?>
         {
             { "MainFlowCoordinator", null },
             { "SoloFreePlayFlowCoordinator", "Solo" },
@@ -22,15 +22,15 @@ namespace bsrpc.Harmony
             { "XSettingsFlowCoordinator", "Enhancements" }
         };
 
-        internal static Action OnScreenChanged;
+        internal static Action? OnScreenChanged;
 
-        internal static string CurrentScreen { get; private set; }
+        internal static string? CurrentScreen { get; private set; }
 
         internal static void Patch(HarmonyLib.Harmony harmony)
         {
             try
             {
-                Type flowCoordinatorType = null;
+                Type? flowCoordinatorType = null;
                 foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
                 {
                     foreach (var t in asm.GetTypes())
@@ -90,7 +90,7 @@ namespace bsrpc.Harmony
 
         private static void UpdateScreen(string typeName)
         {
-            string newScreen;
+            string? newScreen;
             if (KnownScreens.TryGetValue(typeName, out var screenName))
             {
                 newScreen = screenName;

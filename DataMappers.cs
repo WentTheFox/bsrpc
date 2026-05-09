@@ -19,13 +19,13 @@ namespace bsrpc
             {
                 foreach (string input in inputList)
                 {
-                    var replacedValues = new List<string>();
+                    var replacedValues = new List<string?>();
                     string formattedString = Regex.Replace(input, @"{{(.*?)}}", match =>
                     {
                         string key = match.Groups[1].Value;
                         var value = GetValueForFormat(key);
                         replacedValues.Add(value);
-                        return value;
+                        return value ?? "";
                     });
 
                     if (!replacedValues.Exists(value => string.IsNullOrEmpty(value)))
@@ -39,7 +39,7 @@ namespace bsrpc
             return string.Join(joinChar, outputList);
         }
 
-        internal static string GetValueForFormat(string key)
+        internal static string? GetValueForFormat(string key)
         {
             switch (key)
             {
@@ -53,7 +53,7 @@ namespace bsrpc
                 case "customDifficulty": return MapData.Instance.CustomDifficultyLabel;
                 case "stars": return MapData.Instance.RankedState.ScoresaberStars > 0 ? $"{MapData.Instance.RankedState.ScoresaberStars:N2}" : "";
                 case "blstars": return MapData.Instance.RankedState.BeatleaderStars > 0 ? $"{MapData.Instance.RankedState.BeatleaderStars:N2}" : "";
-                case "pp": return MapData.Instance.PP > 0 ? $"{MapData.Instance.PP:N2}" : "";
+                case "pp": return ""; // MapData.PP removed in DataPuller 3.0.0
                 case "playState": return GetPlayState();
                 case "modifiersState": return GetModifiersState();
                 case "lobbyType": return GetLobbyType();
@@ -102,7 +102,7 @@ namespace bsrpc
         {
             if (MapData.Instance.LevelPaused)
             {
-                if (Plugin.LastPauseDateTime.Value != null)
+                if (Plugin.LastPauseDateTime.HasValue)
                 {
                     var secondsSincePause = Math.Max(0, DateTimeToUnixTimestampSeconds(DateTime.Now) - DateTimeToUnixTimestampSeconds(Plugin.LastPauseDateTime.Value));
                     return FormatSeconds(Convert.ToInt32(secondsSincePause));
@@ -360,7 +360,7 @@ namespace bsrpc
                         var source = MapData.Instance.MultiplayerLobbySource;
                         if (!string.IsNullOrEmpty(joinCode) && !string.IsNullOrEmpty(source))
                         {
-                            activity.Party.Id = HashPartyId(joinCode);
+                            activity.Party.Id = HashPartyId(joinCode!);
                             var modName = MapData.Instance.MultiplayerCoreLobbyMod;
                             activity.Secrets.Join = string.IsNullOrEmpty(modName)
                                 ? $"bsrpc://{source}/{joinCode}"
@@ -445,7 +445,7 @@ namespace bsrpc
                 var coverImageUrl = MapData.Instance.CoverImage;
                 if (coverImageUrl != null && coverImageUrl.Length > 0 && coverImageUrl.StartsWith("https"))
                 {
-                    return MapData.Instance.CoverImage;
+                    return coverImageUrl;
                 }
             }
 

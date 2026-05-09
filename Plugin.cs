@@ -17,8 +17,8 @@ namespace bsrpc
     [Plugin(RuntimeOptions.SingleStartInit)]
     public class Plugin
     {
-        private DiscordInstance _discord;
-        private HarmonyLib.Harmony _harmony;
+        private DiscordInstance _discord = null!;
+        private HarmonyLib.Harmony _harmony = null!;
         private DateTime _lastSceneSwitchTime = DateTime.Now;
         private DataMappers.Scenes _lastScene = DataMappers.Scenes.Unknown;
         public static DateTime? LastPauseDateTime { get; private set; } = null;
@@ -28,7 +28,7 @@ namespace bsrpc
             private set;
         }
         public static readonly string PluginVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
-        internal static IPALogger Log { get; private set; }
+        internal static IPALogger Log { get; private set; } = null!;
 
         [Init]
         /// <summary>
